@@ -15,11 +15,13 @@ export default class Tab extends Component {
     ...View.propTypes,
     iconPackage: PropTypes.string,
     iconResId: PropTypes.string,
+    selectedIconResId: PropTypes.string,
     iconSize: PropTypes.number,
     iconUri: PropTypes.string,
     name: PropTypes.string,
     onTabSelected: PropTypes.func,
-    textColor: ColorPropType
+    textColor: ColorPropType,
+    selectedTextColor: ColorPropType
   };
 
   onTabSelected: Function = (e) => {
@@ -45,6 +47,7 @@ export default class Tab extends Component {
         collapsable={false}
         onTabSelected={this.onTabSelected}
         textColor={processColor(this.props.textColor)}
+        selectedTextColor={processColor(this.props.selectedTextColor)}
       />
     );
   }

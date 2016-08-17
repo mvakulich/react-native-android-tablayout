@@ -1,5 +1,6 @@
 package com.xebia.reactnative;
 
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
 import android.util.Log;
@@ -30,6 +31,7 @@ public class TabLayoutManager extends ViewGroupManager<ReactTabLayout> {
     Log.d(REACT_CLASS, "createViewInstance");
     ReactTabLayout tabLayout = new ReactTabLayout(themedReactContext);
     tabLayout.setOnTabSelectedListener(new TabLayoutOnTabSelectedListener(tabLayout));
+    tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     return tabLayout;
   }
 
@@ -149,12 +151,20 @@ public class TabLayoutManager extends ViewGroupManager<ReactTabLayout> {
       }
       Log.d(REACT_CLASS, "dispatchEvent");
       int position = mTabLayout.tabStubs.indexOf(tabStub);
+      tabStub.onTabSelected(true);
       mEventDispatcher.dispatchEvent(new TabSelectedEvent(tabStub.getId(), position));
       mEventDispatcher.dispatchEvent(new TabSelectedEvent(mTabLayout.getId(), position));
     }
 
+
+
     @Override
     public void onTabUnselected(Tab tab) {
+      ReactTabStub tabStub = findTabStubFor(tab);
+      if (tabStub == null) {
+        return;
+      }
+      tabStub.onTabSelected(false);
     }
 
     @Override

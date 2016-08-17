@@ -16,6 +16,9 @@ import com.facebook.stetho.common.StringUtil;
 
 public class ReactTabStub extends ViewGroup {
   public static final String TAG = "ReactTabStub";
+  private float fontSize;
+  private String selectedIconResId;
+  private int selectedTextColor;
 
   public ReactTabStub(Context context) {
     super(context);
@@ -66,6 +69,11 @@ public class ReactTabStub extends ViewGroup {
       if (iconSize > 0) {
         iconSizeChanged();
       }
+
+      if(fontSize > 0){
+        fontSizeChanged();
+      }
+
     } else {
       customViewChanged();
     }
@@ -78,6 +86,10 @@ public class ReactTabStub extends ViewGroup {
 
   public void setIconResId(String iconResId) {
     this.iconResId = iconResId;
+    iconResourceChanged();
+  }
+  public void setSelectedIconResId(String selectedIconResId) {
+    this.selectedIconResId = selectedIconResId;
     iconResourceChanged();
   }
 
@@ -101,6 +113,16 @@ public class ReactTabStub extends ViewGroup {
     textColorChanged();
   }
 
+  public void setSelectedTextColor(int selectedTextColor) {
+    this.selectedTextColor = selectedTextColor;
+    textColorChanged();
+  }
+
+  public void setFontSize(float fontSize) {
+    this.fontSize = fontSize;
+    fontSizeChanged();
+  }
+
   public void setCustomView(View customView) {
     this.customView = customView;
     customViewChanged();
@@ -121,17 +143,28 @@ public class ReactTabStub extends ViewGroup {
   }
 
   private void iconResourceChanged() {
+    if (tab != null) {
+      iconResourceChanged(tab.isSelected());
+    }
+  }
+
+  private void iconResourceChanged(boolean selected) {
     if (tabImage == null) return;
     String packageName = iconPackage != null ? iconPackage : getContext().getPackageName();
+
+    String currentIcon = iconResId;
+    if (selected && !TextUtils.isEmpty(selectedIconResId)){
+      currentIcon = selectedIconResId;
+    }
     Log.d(TAG, "iconResourceChanged, id: " + iconResId + " package: " + packageName);
 
-    if (!TextUtils.isEmpty(iconResId)) {
+    if (!TextUtils.isEmpty(currentIcon)) {
       try {
-        int resId = getContext().getResources().getIdentifier(iconResId, "drawable", packageName);
+        int resId = getContext().getResources().getIdentifier(currentIcon, "drawable", packageName);
         tabImage.setImageResource(resId);
         tabImage.setVisibility(View.VISIBLE);
       } catch (Exception e) {
-        Log.e(TAG, "Icon resource id " + iconResId + " with package " + packageName + " not found", e);
+        Log.e(TAG, "Icon resource id " + currentIcon + " with package " + packageName + " not found", e);
       }
     } else {
       tabImage.setVisibility(View.GONE);
@@ -170,11 +203,31 @@ public class ReactTabStub extends ViewGroup {
     updateLayout();
   }
 
-  private void textColorChanged() {
+  private void textColorChanged(){
+    if (tab != null) {
+      textColorChanged(tab.isSelected());
+    }
+  }
+  private void textColorChanged(boolean selected) {
     if (tabText == null) return;
     Log.d(TAG, "textColorChanged: " + textColor);
+    if (selected){
+      tabText.setTextColor(selectedTextColor);
+    } else {
+      tabText.setTextColor(textColor);
+    }
+  }
 
-    tabText.setTextColor(textColor);
+  public void onTabSelected(boolean selected){
+    textColorChanged(selected);
+    iconResourceChanged(selected);
+  }
+
+  private void fontSizeChanged() {
+    if (tabText == null) return;
+    Log.d(TAG, "fontSizeChanged: " + fontSize);
+
+    tabText.setTextSize(fontSize);
   }
 
   public void accessibilityLabelChanged() {
@@ -214,4 +267,5 @@ public class ReactTabStub extends ViewGroup {
         View.MeasureSpec.makeMeasureSpec(tabView.getMeasuredHeight(), View.MeasureSpec.EXACTLY));
     tabView.layout(tabView.getLeft(), tabView.getTop(), tabView.getRight(), tabView.getBottom());
   }
+
 }

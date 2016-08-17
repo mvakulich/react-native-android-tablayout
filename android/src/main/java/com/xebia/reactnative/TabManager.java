@@ -44,6 +44,11 @@ public class TabManager extends ViewGroupManager<ReactTabStub> {
     view.setIconResId(iconResId);
   }
 
+  @ReactProp(name = "selectedIconResId")
+  public void setSelectedIconResId(ReactTabStub view, String iconResId) {
+    view.setSelectedIconResId(iconResId);
+  }
+
   @ReactProp(name = "iconPackage")
   public void setIconPackage(ReactTabStub view, String iconPackage) {
     view.setIconPackage(iconPackage);
@@ -59,10 +64,22 @@ public class TabManager extends ViewGroupManager<ReactTabStub> {
     view.setIconSize(iconSize);
   }
 
+  @ReactProp(name = "selectedTextColor")
+  public void setSelectedTextColor(ReactTabStub view, int textColor) {
+    view.setSelectedTextColor(textColor);
+  }
+
   @ReactProp(name = "textColor")
   public void setTextColor(ReactTabStub view, int textColor) {
     view.setTextColor(textColor);
   }
+
+
+  @ReactProp(name = "fontSize")
+  public void setFontSize(ReactTabStub view, float fontSize) {
+    view.setFontSize(fontSize);
+  }
+
 
   @Override
   public void setAccessibilityLabel(ReactTabStub view, String accessibilityLabel) {
