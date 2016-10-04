@@ -13,7 +13,8 @@
       android:id="@+id/tabText"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:singleLine="true"
-      android:textAppearance="@style/TextAppearance.Design.Tab"/>
+      android:singleLine="false"
+      android:gravity="center_horizontal"
+      android:textAppearance="@style/TextAppearance.Design.Tab"      android:lines="2"/>
 
 </LinearLayout>

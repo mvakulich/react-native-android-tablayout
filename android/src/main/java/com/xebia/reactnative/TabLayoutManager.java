@@ -169,6 +169,15 @@ public class TabLayoutManager extends ViewGroupManager<ReactTabLayout> {
 
     @Override
     public void onTabReselected(Tab tab) {
+      ReactTabStub tabStub = findTabStubFor(tab);
+      if (tabStub == null) {
+        return;
+      }
+      Log.d(REACT_CLASS, "dispatchEvent");
+      int position = mTabLayout.tabStubs.indexOf(tabStub);
+      tabStub.onTabSelected(true);
+      mEventDispatcher.dispatchEvent(new TabSelectedEvent(tabStub.getId(), position));
+      mEventDispatcher.dispatchEvent(new TabSelectedEvent(mTabLayout.getId(), position));
     }
 
     private ReactTabStub findTabStubFor(Tab tab) {
